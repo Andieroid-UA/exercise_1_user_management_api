@@ -15,6 +15,9 @@ Rails.application.routes.draw do
     # localhost:3000/users/1
     delete '/users/:id', to: 'users#destroy'
   
+    # Define routes for the UsersController
+    resources :users
+
   end
   #--------------------------------------------------------------------------
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

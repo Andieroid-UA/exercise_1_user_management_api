@@ -3,23 +3,22 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
 
   def index
-    #debugger
-    users = User.all
-
-    render json: users, status: 200
+    @users = User.all
+    render json: @users, status: 200
   end
 
   def show
     render json: @user, status: 200
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'User not found' }, status: :not_found  
   end
 
 def create
-  user = User.new(user_params)
-
-  if user.save
-    render json: user, status: :created
+  @user = User.new(user_params)
+  if @user.save
+    render json: @user, status: :created
   else
-    render json: user.errors, status: :unprocessable_entity
+    render json: @user.errors, status: :unprocessable_entity
   end
 end
 
@@ -29,6 +28,8 @@ def update
   else
     render json: @user.errors, status: :unprocessable_entity
   end
+rescue ActiveRecord::RecordNotFound
+  render json: { error: 'User not found' }, status: :not_found 
 end  
 
 def destroy
@@ -37,6 +38,8 @@ def destroy
   else
     render json: @user.errors, status: :unprocessable_entity
   end
+rescue ActiveRecord::RecordNotFound
+  render json: { error: 'User not found' }, status: :not_found 
 end
 
 private
@@ -46,6 +49,6 @@ private
   end
 
   def user_params
-    params.require(:user).permit(:name, :email)
+    params.require(:user).permit(:full_name, :age, :email)
   end
 end
